@@ -1,10 +1,11 @@
 import requests
 import datetime
-import openai
 import os
+from openai import OpenAI
 
-# Clés récupérées depuis les variables d'environnement
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Initialiser client OpenAI avec nouvelle API
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 telegram_token = os.getenv("TELEGRAM_BOT_TOKEN")
 chat_id = os.getenv("TELEGRAM_CHAT_ID")
 
@@ -12,8 +13,8 @@ chat_id = os.getenv("TELEGRAM_CHAT_ID")
 today = datetime.date.today()
 prompt = f"Quelles sont les activités à Nice et aux alentours le {today.day}/{today.month}/{today.year} ? Donne un résumé clair, trié par type d’activité si possible (concert, expo, événement gratuit, etc)."
 
-# Appel à OpenAI
-response = openai.ChatCompletion.create(
+# Appel à l’API ChatGPT avec la nouvelle méthode
+response = client.chat.completions.create(
     model="gpt-4",
     messages=[{"role": "user", "content": prompt}],
     temperature=0.7
